@@ -10,15 +10,17 @@ class ScrollBoxScreen extends StatefulWidget {
 
 class _ScrollBoxScreenState extends State<ScrollBoxScreen> {
   final int _totalPage = 20;
-  ScrollController _controller = ScrollController();
+  bool showScroll = false;
+  ScrollController? _controller;
   double scrollY = 0;
   Size? size;
 
   @override
   void initState() {
-    _controller.addListener(() {
+    _controller ??= ScrollController();
+    _controller!.addListener(() {
       setState(() {
-        scrollY = _controller.offset;
+        scrollY = _controller!.offset;
       });
     });
     super.initState();
@@ -26,17 +28,24 @@ class _ScrollBoxScreenState extends State<ScrollBoxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size;
+    if(size == null || size!.width ==0){
+      size = MediaQuery.of(context).size;
+    }
 
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
+            const  Positioned(
+              child: Text("스크롤하세요"),
+              left: 0,
+              top: 0,
+            ),
             _opacityBox_1(_calcStatusNormalize(500, 5000, scrollY),
-                Text("푸드를 소개합니다", style: TextStyle(fontSize: 24))),
+                const Text("푸드를 소개합니다", style: TextStyle(fontSize: 24))),
             _opacityBox_2(
                 _calcStatusNormalize(1500, 4000, scrollY),
-                Text(
+                const Text(
                   "푸드홈 오픈",
                   style: TextStyle(fontSize: 24),
                   textAlign: TextAlign.center,
@@ -44,11 +53,11 @@ class _ScrollBoxScreenState extends State<ScrollBoxScreen> {
             BlockGroup(
                 width: size!.width,
                 height: size!.height,
-                status: _calcStatusNormalize(1000, size!.height * _totalPage - 800, scrollY)),
+                status: _calcStatusNormalize(
+                    1000, size!.height * _totalPage - 800, scrollY)),
             Scrollbar(
               thickness: 10,
-              radius: const Radius.circular(5),
-              scrollbarOrientation: ScrollbarOrientation.right,
+                radius: const Radius.circular(5),
               child: SingleChildScrollView(
                 controller: _controller,
                 child: _parentBox(size!.width, size!.height),
