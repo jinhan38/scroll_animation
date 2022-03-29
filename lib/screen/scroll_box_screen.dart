@@ -46,7 +46,6 @@ class _ScrollBoxScreenState extends State<ScrollBoxScreen> {
                 height: size!.height,
                 status: _calcStatusNormalize(1000, size!.height * _totalPage - 800, scrollY)),
             Scrollbar(
-              isAlwaysShown: true,
               thickness: 10,
               radius: const Radius.circular(5),
               scrollbarOrientation: ScrollbarOrientation.right,
